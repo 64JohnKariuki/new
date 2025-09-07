@@ -1,0 +1,52 @@
+name: 🌍 Deploy React Portfolio to FTP Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # 🔨 Build Job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: 📦 Install Dependencies
+        run: |
+          npm install
+
+      - name: 🏗️ Build React Project
+        run: |
+          npm run build
+      
+      - name: 📤 Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-file
+          path: ./build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: production-file
+          path: ./build
+
+      - name: 🌍 Deploy to FTP Server
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /portfolio
+          local-dir: ./build
