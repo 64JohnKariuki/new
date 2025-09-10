@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: production-file
-          path: build
+          path: dist
 
   # 🚀 Deploy Job
   deploy:
@@ -60,5 +60,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 1624
           protocol: ftp
-          local-dir: ./build
+          local-dir: ./dist
           server-dir: /portfolio/
