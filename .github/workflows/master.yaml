@@ -64,3 +64,4 @@ jobs:
           protocol: ftps
           local-dir: ./dist
           server-dir: /portfolio/
+          args: '--no-check-certificate' # This is the key addition
