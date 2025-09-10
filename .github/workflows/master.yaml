@@ -1,4 +1,4 @@
-name: 🌍 Deploy React Portfolio to FTP Server
+name: 🌍 Deploy Vite Portfolio via FTPS
 
 on:
   push:
@@ -32,14 +32,14 @@ jobs:
           fi
           echo "✅ Dist folder exists."
 
-      - name: 📝 List files after build
+      - name: 📝 List dist files
         run: ls -R dist
 
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: production-file
-          path: dist
+          path: dist/*
 
   # 🚀 Deploy Job
   deploy:
@@ -50,15 +50,21 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: production-file
-          path: .
+          path: ./dist
 
-      - name: 🌍 Deploy to FTP Server
+      - name: 🔐 Test FTPS Login
+        run: |
+          apt-get update && apt-get install -y lftp
+          echo "Testing FTPS login..."
+          lftp -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftps://ftp.launit.com -e "ls; quit"
+      
+      - name: 🌍 Deploy to FTPS Server
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          protocol: ftp
+          protocol: ftps
           local-dir: ./
           server-dir: /portfolio/
