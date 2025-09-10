@@ -58,7 +58,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: 1624
-          protocol: ftp
+          port: 21
+          protocol: ftps
           local-dir: ./
           server-dir: /portfolio/
