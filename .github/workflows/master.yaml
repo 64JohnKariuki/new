@@ -21,19 +21,19 @@ jobs:
       - name: 📦 Install Dependencies
         run: npm install
 
-      - name: 🏗️ Build React Project
+      - name: 🏗️ Build Vite Project
         run: npm run build
 
-      - name: ✅ Verify build folder exists
+      - name: ✅ Verify dist folder exists
         run: |
-          if [ ! -d "build" ]; then
-            echo "❌ Build folder not found! Did 'npm run build' fail?"
+          if [ ! -d "dist" ]; then
+            echo "❌ Dist folder not found! Did 'npm run build' fail?"
             exit 1
           fi
-          echo "✅ Build folder exists."
+          echo "✅ Dist folder exists."
 
       - name: 📝 List files after build
-        run: ls -R
+        run: ls -R dist
 
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
