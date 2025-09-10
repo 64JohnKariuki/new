@@ -1,4 +1,4 @@
-name: 🌍 Deploy Vite Portfolio via FTP
+name: 🌍 Deploy Vite Portfolio via FTPS
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - main
 
 jobs:
+  # 🔨 Build Job
   build:
     runs-on: ubuntu-latest
     steps:
@@ -31,12 +32,16 @@ jobs:
           fi
           echo "✅ Dist folder exists."
 
+      - name: 📝 List dist files
+        run: ls -R dist
+
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: production-file
           path: dist/*
 
+  # 🚀 Deploy Job
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -47,14 +52,13 @@ jobs:
           name: production-file
           path: ./dist
 
-      - name: ⚡ Test FTP connectivity
+      - name: 🔐 Test FTPS Login
         run: |
           sudo apt-get update && sudo apt-get install -y lftp
-          echo "Testing FTP login..."
-          # -e 'quit' ensures lftp exits immediately
-          lftp -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://ftp.launit.com -e "ls; quit" || exit 1
+          echo "Testing FTPS login..."
+          lftp -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftps://ftp.launit.com -e "set ssl:verify-cert no; ls; quit"
 
-      - name: 🌍 Deploy via FTP
+      - name: 🌍 Deploy to FTPS Server
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -64,4 +68,4 @@ jobs:
           protocol: ftps
           local-dir: ./dist
           server-dir: /portfolio/
-          args: '--no-check-certificate' # This is the key addition
+          args: '--no-check-certificate'
