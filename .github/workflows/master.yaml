@@ -1,4 +1,4 @@
-name: 🌍 Deploy Vite Portfolio via FTPS
+name: 🌍 Deploy Vite Portfolio via FTP
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
       - main
 
 jobs:
-  # 🔨 Build Job
   build:
     runs-on: ubuntu-latest
     steps:
@@ -32,16 +31,12 @@ jobs:
           fi
           echo "✅ Dist folder exists."
 
-      - name: 📝 List dist files
-        run: ls -R dist
-
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: production-file
           path: dist/*
 
-  # 🚀 Deploy Job
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -52,13 +47,14 @@ jobs:
           name: production-file
           path: ./dist
 
-      - name: 🔐 Test FTPS Login
+      - name: ⚡ Test FTP connectivity
         run: |
           sudo apt-get update && sudo apt-get install -y lftp
-          echo "Testing FTPS login..."
-          lftp -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftps://ftp.launit.com -e "ls; quit"
+          echo "Testing FTP login..."
+          # -e 'quit' ensures lftp exits immediately
+          lftp -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ftp://ftp.launit.com -e "ls; quit" || exit 1
 
-      - name: 🌍 Deploy to FTPS Server
+      - name: 🌍 Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_SERVER }}
