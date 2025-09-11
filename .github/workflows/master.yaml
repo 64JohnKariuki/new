@@ -62,6 +62,6 @@ jobs:
           password: ${{ secrets.ftp_password }}
           port: 21
           protocol: ftp
-          local-dir: ./dist
+          local-dir: ./dist/
           server-dir: /new/
           args: '--no-check-certificate'
