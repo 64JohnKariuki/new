@@ -40,8 +40,8 @@ jobs:
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@main
         with:
-          name: production-file
-          path: dist/*
+          name: dist
+          path: dist
 
   # 🚀 Deploy Job
   deploy:
@@ -51,8 +51,8 @@ jobs:
       - name: 📥 Download Artifact
         uses: actions/download-artifact@main
         with:
-          name: production-file
-          path: ./dist
+          name: dist
+          path: dist
 
       - name: 🔐 Test FTPS Login
         run: |
