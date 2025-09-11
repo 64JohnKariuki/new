@@ -54,12 +54,6 @@ jobs:
           name: dist
           path: dist
 
-      - name: 🔐 Test FTPS Login
-        run: |
-         sudo apt-get update && sudo apt-get install -y lftp
-         echo "Testing FTPS login..."
-         lftp -u 'info@launit.com,${{ secrets.ftp_password }}' ftps://ftp.launit.com -e "set net:timeout 30; set ssl:verify-cert no; ls; quit"
-
       - name: 🌍 Deploy to FTPS Server
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
