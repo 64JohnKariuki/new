@@ -55,13 +55,11 @@ jobs:
           path: dist
 
       - name: 🌍 Deploy to FTPS Server
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        uses: easingthemes/ssh-deploy@main
         with:
-          server: ftp.launit.com
-          username: info@launit.com
-          password: ${{ secrets.ftp_password }}
-          port: 21
-          protocol: ftp
-          local-dir: ./dist/
-          server-dir: /new/
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SOURCE: "dist/"
+          REMOTE_HOST: "ftp.launit.com"
+          REMOTE_USER: "info@launit.com"
+          TARGET: "/new/"
           args: '--no-check-certificate'
