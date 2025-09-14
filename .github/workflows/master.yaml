@@ -57,7 +57,7 @@ jobs:
       - name: 🌍 Deploy to FTPS Server
         uses: easingthemes/ssh-deploy@main
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEYS }}
           SOURCE: "dist/"
           REMOTE_HOST: "ftp.launit.com"
           REMOTE_USER: "info@launit.com"
